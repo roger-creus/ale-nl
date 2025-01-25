@@ -15,6 +15,7 @@ parser.add_argument('--seed', type=int, default=1)
 # nlp
 parser.add_argument('--model_name', type=str, default='meta-llama/Llama-3.2-1B-Instruct')
 parser.add_argument('--context_length', type=int, default=0)
+parser.add_argument('--system_prompt_path', type=str, default='prompts/system_prompt_simple.txt')
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -22,6 +23,7 @@ if __name__ == '__main__':
     # create save directory
     args.save_dir = os.path.join('results', args.model_name.split('/')[-1], args.env_id, f'contextLen_{args.context_length}')
     os.makedirs(args.save_dir, exist_ok=True)
+    env_name = args.env_id
     args.env_id = f'{args.env_id}NoFrameskip-v4'
     
     # make env
@@ -34,9 +36,10 @@ if __name__ == '__main__':
 
     # make LLM agent
     agent = LLMAgent(
-        args.model_name,
+        model_name=args.model_name,
+        env_id=env_name,
         action_meanings=env.action_meanings,
-        env_id=args.env_id.replace('NoFrameskip-v4', '')
+        system_prompt_path=args.system_prompt_path,
     )
     
     # loop
@@ -103,7 +106,8 @@ if __name__ == '__main__':
     print(f'Mean Length: {mean_length}, Std Length: {std_length}')
     
     with open(os.path.join(args.save_dir, 'metrics.csv'), 'w') as f:
-        f.write('context_length,mean_reward,std_reward,mean_length,std_length\n')
-        f.write(f'{args.context_length},{mean_reward},{std_reward},{mean_length},{std_length}')
+        f.write('model_name,env_id,sys_prompt,context_length,episode_reward,episode_length\n')
+        for episode in range(args.num_episodes):
+            f.write(f'{args.model_name},{env_name},{args.system_prompt_path.split("/")[-1].split(".")[-2]},{args.context_length},{ep_rewards[episode]},{ep_lengths[episode]}\n')
    
     env.close()

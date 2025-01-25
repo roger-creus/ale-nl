@@ -1,0 +1,4 @@
+results/*
+*.sbatch
+*.pyc
+*.egg-info

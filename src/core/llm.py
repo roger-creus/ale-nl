@@ -7,24 +7,31 @@ class LLMAgent():
         self,
         model_name="meta-llama/Llama-3.2-1B-Instruct",
         env_id="SpaceInvaders",
-        action_meanings=None
+        action_meanings=None,
+        system_prompt_path="prompts/system_prompt_simple.txt",
     ):
         self.pipeline = transformers.pipeline(
             "text-generation",
             model=model_name,
             device_map="auto",
             torch_dtype=torch.bfloat16, 
+            max_new_tokens=200
         )
         
         self.env_id = env_id
         self.action_meanings = action_meanings
         print(f"LLM agent {model_name} initialized for {env_id} with actions: {action_meanings}")
         
+        with open(system_prompt_path, "r") as f:
+            self.system_prompt = f.read()
+            self.system_prompt = self.system_prompt.replace("{env_id}", self.env_id)
+            self.system_prompt = self.system_prompt.replace("{action_meanings}", str(self.action_meanings))
+        
         self.invalid_generation_counter = 0
         
     def generate(self, prompt):
         action_prompt = [
-            {"role": "system", "content": f"You are playing {self.env_id}. You have to decide on the next action to take. The possible actions are: {self.action_meanings}. Answer with only the index of the action you want to take or otherwise the action will be ignored. Do not include any other information other than the selected action index integer."}, 
+            {"role": "system", "content": self.system_prompt},
             {"role": "user", "content": prompt},
         ]
 
