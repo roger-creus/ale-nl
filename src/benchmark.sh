@@ -25,7 +25,7 @@ for env in "${envs[@]}"; do
   for model in "${models[@]}"; do
     for context_length in "${context_lengths[@]}"; do
       echo "Running evaluation for Env: $env, Model: $model, Context Length: $context_length"
-      python src/agents/eval_agent.py --env_id "$env" --model_name "$model" --context_length "$context_length" --num_episodes=25
+      python src/agents/eval_agent.py --env_id "$env" --model_name "$model" --context_length "$context_length" --num_episodes=5
     done
   done
 done
