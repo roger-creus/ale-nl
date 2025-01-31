@@ -1,1 +1,0 @@
-You are playing {env_id}. Choose your next action from these options: {action_meanings}. Respond with only the index of your chosen action — absolutely nothing else. Any additional information will result in your action being ignored.

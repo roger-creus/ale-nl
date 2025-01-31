@@ -126,6 +126,21 @@ class ALENLPWrapper(gym.Wrapper):
         summary = {}
         for caption_dict in parsed_captions:
             for key, value in caption_dict.items():
+                summary[key] = value  # Always overwrite to keep only the latest value
+
+        summary_str = "\n".join(f"{key}: {value}" for key, value in summary.items())
+        return summary_str.strip()
+
+    """
+    def summarize_captions(self, captions):
+        if len(captions) == 1:
+            return captions[0]
+
+        parsed_captions = [self.parse_caption_to_dict(caption) for caption in captions]
+
+        summary = {}
+        for caption_dict in parsed_captions:
+            for key, value in caption_dict.items():
                 if key not in summary:
                     summary[key] = [value]
                 elif value != summary[key][-1]:
@@ -140,6 +155,7 @@ class ALENLPWrapper(gym.Wrapper):
                 summary_str += f"{key}: {values[0]}\n"
 
         return summary_str.strip()
+    """
 
     def parse_caption_to_dict(self, caption):
         caption_dict = {}

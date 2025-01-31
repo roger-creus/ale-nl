@@ -1,0 +1,1 @@
+Given the key elements, quickly determine the best strategy for the next move. Focus on the primary objective (e.g., survival, attack, etc.) and the most important factors influencing it. Respond in a compact, clear manner.

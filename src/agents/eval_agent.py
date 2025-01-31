@@ -7,6 +7,8 @@ from src.env.env import make_env
 from src.core.llm import LLMAgent
 from src.env.ale_nlp_wrapper import ALENLPWrapper
 
+from IPython import embed
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--env_id', type=str, default='SpaceInvaders')
 parser.add_argument('--num_episodes', type=int, default=5)
@@ -15,13 +17,13 @@ parser.add_argument('--seed', type=int, default=1)
 # nlp
 parser.add_argument('--model_name', type=str, default='meta-llama/Llama-3.2-1B-Instruct')
 parser.add_argument('--context_length', type=int, default=0)
-parser.add_argument('--system_prompt_path', type=str, default='prompts/system_prompt_simple.txt')
+parser.add_argument('--prompt_chain_path', type=str, default='prompt_chains/simple')
 
 if __name__ == '__main__':
     args = parser.parse_args()
 
     # create save directory
-    args.save_dir = os.path.join('results', args.model_name.split('/')[-1], args.env_id, f'contextLen_{args.context_length}')
+    args.save_dir = os.path.join('results', args.model_name.split('/')[-1], args.env_id, args.prompt_chain_path.split("/")[-1], f'contextLen_{args.context_length}')
     os.makedirs(args.save_dir, exist_ok=True)
     env_name = args.env_id
     args.env_id = f'{args.env_id}NoFrameskip-v4'
@@ -39,7 +41,7 @@ if __name__ == '__main__':
         model_name=args.model_name,
         env_id=env_name,
         action_meanings=env.action_meanings,
-        system_prompt_path=args.system_prompt_path,
+        prompt_chain_path=args.prompt_chain_path,
     )
     
     # loop
@@ -51,44 +53,49 @@ if __name__ == '__main__':
         ep_r = 0
         ep_l = 0
         frames = []
-        captions = []
-        llm_actions = []
-
+        c = 0
         while not done:
+            c += 1
+            # record frames
             frames.append(env.render())
 
             # step simulation
-            captions.append(info['caption'])
             action = agent.generate(info['caption'])
-            llm_actions.append(env.action_meanings[action])
             obs, r, term, trunc, info = env.step(action)
 
             # store metrics
             ep_r += r
             ep_l += 1
             done = term or trunc
-
+            
         # save gif
         gif_path = os.path.join(args.save_dir, f'episode_{episode}.gif')
         imageio.mimsave(gif_path, frames, fps=30)
         
         # save captions
         caption_path = os.path.join(args.save_dir, f'episode_{episode}_captions.txt')
+        logs = agent.get_logs() 
         with open(caption_path, 'w') as f:
-            for caption, action in zip(captions, llm_actions):
-                f.write(f'{caption}\n')
-                f.write(f'LLM Action: {action}\n====================\n')
-            f.write(f'Invalid generations in this episode: {agent.invalid_generation_counter}')
+            f.write('\n'.join(logs))
+            
+        # save action distribution
+        all_actions = {env.action_meanings[i]: 0 for i in range(env.action_space.n)}
+        for log in logs:
+            action = log.split('\nassistant: ')[-1].split('\n')[0]
+            try:
+                all_actions[action] += 1
+            except:
+                continue
         
-        # save action distribution (histogram)
-        action_freq = {action: llm_actions.count(action) for action in set(llm_actions)}
-        action_freq = {k: v for k, v in sorted(action_freq.items(), key=lambda item: item[1], reverse=True)}
+        all_actions = dict(sorted(all_actions.items(), key=lambda item: item[1], reverse=True))
         plt.figure()
-        plt.bar(action_freq.keys(), action_freq.values())
-        plt.title('Action Distribution')
+        plt.bar(all_actions.keys(), all_actions.values())
+        plt.xticks(rotation=45)
+        plt.title(f'Action Distribution for Episode {episode}')
         plt.xlabel('Action')
         plt.ylabel('Frequency')
-        plt.savefig(os.path.join(args.save_dir, f'episode_{episode}_actions.png'))
+        plt.tight_layout()
+        plt.savefig(os.path.join(args.save_dir, f'episode_{episode}_action_distribution.png'))
         plt.close()
         
         # print metrics
@@ -106,8 +113,8 @@ if __name__ == '__main__':
     print(f'Mean Length: {mean_length}, Std Length: {std_length}')
     
     with open(os.path.join(args.save_dir, 'metrics.csv'), 'w') as f:
-        f.write('model_name,env_id,sys_prompt,context_length,episode_reward,episode_length\n')
+        f.write('model_name,env_id,prompt_chain,context_length,episode_reward,episode_length\n')
         for episode in range(args.num_episodes):
-            f.write(f'{args.model_name},{env_name},{args.system_prompt_path.split("/")[-1].split(".")[-2]},{args.context_length},{ep_rewards[episode]},{ep_lengths[episode]}\n')
+            f.write(f'{args.model_name},{env_name},{args.prompt_chain_path.split("/")[-1]},{args.context_length},{ep_rewards[episode]},{ep_lengths[episode]}\n')
    
     env.close()

@@ -1,0 +1,1 @@
+Based on the strategy, choose the optimal action from the available options. Respond with only a single integer representing the index of your chosen action. No explanations or extra words; just the index. Any deviation from this format will result in your action being discarded.

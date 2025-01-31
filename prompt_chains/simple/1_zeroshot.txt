@@ -1,0 +1,1 @@
+Respond with only a single integer representing the index of your chosen action. Do not include any explanations, words, or additional characters. Any deviation from this format will result in your action being discarded.

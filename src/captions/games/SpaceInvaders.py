@@ -5,13 +5,11 @@ from IPython import embed
 def make_caption(ram, objs):
     ram_mappings = dict(
         invaders_left_count=17,
-        player_score=104,
         num_lives=73,
     )
     
     # ram information
     caption = f"""
-        Player score: {ram[ram_mappings['player_score']]} \n
         Lives: {ram[ram_mappings['num_lives']]} \n
         Aliens left: {ram[ram_mappings['invaders_left_count']]} \n
         """

@@ -1,0 +1,1 @@
+Briefly analyze the game state and identify the most critical factors that influence decision-making. Focus only on the essential elements such as player status, enemy behavior, and any other key aspects directly impacting the current situation. Keep your response concise and precise.
