@@ -1,0 +1,1 @@
+Extract the action index from the given response. Return only the integer corresponding to the selected action. Do not include any explanations, words, or extra characters—only the number. Any deviation from this format will result in the output being discarded.

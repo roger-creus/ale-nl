@@ -15,8 +15,8 @@ class LLMAgent():
         action_meanings=None,
         prompt_chain_path="prompt_chains/simple",
         save_dir="results",
+        temperature=0.1,
     ):
-        
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
             torch_dtype=torch.bfloat16,
@@ -32,6 +32,8 @@ class LLMAgent():
             tokenizer=tokenizer,
             torch_dtype=torch.bfloat16,
             max_new_tokens=512,
+            do_sample=True,
+            temperature=temperature,
         )
 
         # load prompt chain
@@ -42,6 +44,7 @@ class LLMAgent():
                 self.prompt_chain.append(f.read())
                 
         # misc
+        self.temperature = temperature
         self.env_id = env_id
         self.action_meanings = action_meanings
         print(f"LLM agent {model_name} initialized for {env_id}")
@@ -62,7 +65,7 @@ class LLMAgent():
             if i == len(self.prompt_chain) - 1:
                 llm_chain[-1]["content"] = llm_chain[-1]["content"] + "\n\n" + "Remember the available actions are: " + str(self.action_meanings)
 
-            output = self.pipeline(llm_chain, pad_token_id=self.pipeline.tokenizer.eos_token_id)
+            output = self.pipeline(llm_chain, pad_token_id=self.pipeline.tokenizer.eos_token_id, temperature=self.temperature, do_sample=True)
             output = output[0]['generated_text'][-1]["content"]
             llm_chain.append({"role": "assistant", "content": output})
                 
@@ -73,6 +76,8 @@ class LLMAgent():
             self.invalid_generation_counter += 1
             action = 0
             
+        print(f"Generated action: {action}")
+        
         # logging
         llm_chain[-1]["content"] = f"{self.action_meanings[action]}"
         self.logs.append(log_chain(llm_chain))

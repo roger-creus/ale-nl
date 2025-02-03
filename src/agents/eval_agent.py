@@ -16,6 +16,7 @@ parser.add_argument('--seed', type=int, default=1)
 
 # nlp
 parser.add_argument('--model_name', type=str, default='meta-llama/Llama-3.2-1B-Instruct')
+parser.add_argument('--temperature', type=float, default=0.1)
 parser.add_argument('--context_length', type=int, default=0)
 parser.add_argument('--prompt_chain_path', type=str, default='prompt_chains/simple')
 
@@ -23,7 +24,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # create save directory
-    args.save_dir = os.path.join('results', args.model_name.split('/')[-1], args.env_id, args.prompt_chain_path.split("/")[-1], f'contextLen_{args.context_length}')
+    args.save_dir = os.path.join(
+        'results',
+        args.model_name.split('/')[-1],
+        args.env_id,
+        args.prompt_chain_path.split("/")[-1],
+        f"temperature_{args.temperature}",
+        f'contextLen_{args.context_length}'
+    )
     os.makedirs(args.save_dir, exist_ok=True)
     env_name = args.env_id
     args.env_id = f'{args.env_id}NoFrameskip-v4'
@@ -42,6 +50,7 @@ if __name__ == '__main__':
         env_id=env_name,
         action_meanings=env.action_meanings,
         prompt_chain_path=args.prompt_chain_path,
+        temperature=args.temperature,
     )
     
     # loop
@@ -113,8 +122,8 @@ if __name__ == '__main__':
     print(f'Mean Length: {mean_length}, Std Length: {std_length}')
     
     with open(os.path.join(args.save_dir, 'metrics.csv'), 'w') as f:
-        f.write('model_name,env_id,prompt_chain,context_length,episode_reward,episode_length\n')
+        f.write('model_name,env_id,prompt_chain,temperature,context_length,episode_reward,episode_length\n')
         for episode in range(args.num_episodes):
-            f.write(f'{args.model_name},{env_name},{args.prompt_chain_path.split("/")[-1]},{args.context_length},{ep_rewards[episode]},{ep_lengths[episode]}\n')
+            f.write(f'{args.model_name},{env_name},{args.prompt_chain_path.split("/")[-1]},{args.temperature},{args.context_length},{ep_rewards[episode]},{ep_lengths[episode]}\n')
    
     env.close()
