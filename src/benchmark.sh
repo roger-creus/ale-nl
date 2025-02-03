@@ -10,7 +10,7 @@ models=(
   "meta-llama/Llama-3.2-1B-Instruct"
   #"meta-llama/Llama-3.3-70B-Instruct"
   "meta-llama/Llama-3.2-3B-Instruct"
-  "meta-llama/Llama-3.1-8B-Instruct"
+  "meta-llama/Llama-3-8B-Instruct"
   "microsoft/phi-4"
   "microsoft/Phi-3.5-mini-instruct"
   "mistralai/Mixtral-8x7B-Instruct-v0.1"
@@ -27,7 +27,7 @@ prompt_chains=(
 )
 
 temperatures=(
-  0.0
+  0.01
   0.5
   1.0
 )

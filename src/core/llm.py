@@ -76,13 +76,12 @@ class LLMAgent():
             self.invalid_generation_counter += 1
             action = 0
             
-        print(f"Generated action: {action}")
-        
         # logging
         llm_chain[-1]["content"] = f"{self.action_meanings[action]}"
         self.logs.append(log_chain(llm_chain))
-        
         return action
     
     def get_logs(self):
-        return self.logs
+        cp_logs = self.logs.copy()
+        self.logs = []
+        return cp_logs
