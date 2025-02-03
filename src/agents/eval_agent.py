@@ -16,7 +16,7 @@ parser.add_argument('--seed', type=int, default=1)
 
 # nlp
 parser.add_argument('--model_name', type=str, default='meta-llama/Llama-3.2-1B-Instruct')
-parser.add_argument('--temperature', type=float, default=0.1)
+parser.add_argument('--temperature', type=float, default=0.01)
 parser.add_argument('--context_length', type=int, default=0)
 parser.add_argument('--prompt_chain_path', type=str, default='prompt_chains/simple')
 
