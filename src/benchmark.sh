@@ -8,12 +8,15 @@ envs=(
 # List of model names
 models=(
   "meta-llama/Llama-3.2-1B-Instruct"
-  #"meta-llama/Llama-3.3-70B-Instruct"
+  "Qwen/Qwen2.5-0.5B-Instruct"
   "meta-llama/Llama-3.2-3B-Instruct"
   "meta-llama/Meta-Llama-3-8B-Instruct"
+  #"deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
   "microsoft/phi-4"
   "microsoft/Phi-3.5-mini-instruct"
-  "mistralai/Mixtral-8x7B-Instruct-v0.1"
+  #"Qwen/Qwen2.5-14B-Instruct"
+  #"deepseek-ai/DeepSeek-R1-Distill-Qwen-14B"
+  #"mistralai/Mixtral-8x7B-Instruct-v0.1"
 )
 
 # List of context lengths

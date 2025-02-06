@@ -101,7 +101,7 @@ class ALENLPWrapper(gym.Wrapper):
                 
             # history states
             else:
-                caption += f"<TIMESTEP>\nt-{n-i}\n<\TIMESTEP>\n"
+                caption += f"<TIMESTEP>\nt-{n-i+1}\n<\TIMESTEP>\n"
                 caption += f"<STATE>\n{prompt_context['states'][i]}\n<\STATE>\n"
                 caption += f"<ACTION>\n{prompt_context['actions'][i]}\n<\ACTION>\n"
                 caption += f"<REWARD>\n{prompt_context['rewards'][i]}\n<\REWARD>\n"
@@ -130,32 +130,6 @@ class ALENLPWrapper(gym.Wrapper):
 
         summary_str = "\n".join(f"{key}: {value}" for key, value in summary.items())
         return summary_str.strip()
-
-    """
-    def summarize_captions(self, captions):
-        if len(captions) == 1:
-            return captions[0]
-
-        parsed_captions = [self.parse_caption_to_dict(caption) for caption in captions]
-
-        summary = {}
-        for caption_dict in parsed_captions:
-            for key, value in caption_dict.items():
-                if key not in summary:
-                    summary[key] = [value]
-                elif value != summary[key][-1]:
-                    summary[key].append(value)
-
-        summary_str = ""
-        for key, values in summary.items():
-            if len(values) > 1:
-                changes = " → ".join(values)
-                summary_str += f"{key}: {changes}\n"
-            else:
-                summary_str += f"{key}: {values[0]}\n"
-
-        return summary_str.strip()
-    """
 
     def parse_caption_to_dict(self, caption):
         caption_dict = {}

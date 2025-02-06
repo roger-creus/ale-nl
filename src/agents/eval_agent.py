@@ -2,6 +2,7 @@ import argparse
 import os
 import imageio
 import matplotlib.pyplot as plt
+import time
 
 from src.env.env import make_env
 from src.core.llm import LLMAgent
@@ -15,7 +16,7 @@ parser.add_argument('--num_episodes', type=int, default=5)
 parser.add_argument('--seed', type=int, default=1)
 
 # nlp
-parser.add_argument('--model_name', type=str, default='meta-llama/Llama-3.2-1B-Instruct')
+parser.add_argument('--model_name', type=str, default='Qwen/Qwen2.5-0.5B-Instruct')
 parser.add_argument('--temperature', type=float, default=0.01)
 parser.add_argument('--context_length', type=int, default=0)
 parser.add_argument('--prompt_chain_path', type=str, default='prompt_chains/simple')
@@ -56,6 +57,7 @@ if __name__ == '__main__':
     # loop
     ep_rewards = []
     ep_lengths = []
+    generation_time = time.time()
     for episode in range(args.num_episodes):
         obs, info = env.reset()
         done = False
@@ -68,8 +70,13 @@ if __name__ == '__main__':
             # record frames
             frames.append(env.render())
 
-            # step simulation
+            # query LLM agent
             action = agent.generate(info['caption'])
+            # round float
+            print(f'=== Step {c} | Action: {action} | Inference Time: {round(time.time() - generation_time, 2)}s ===')
+            generation_time = time.time()
+            
+            # step environment
             obs, r, term, trunc, info = env.step(action)
 
             # store metrics
@@ -83,10 +90,19 @@ if __name__ == '__main__':
         
         # save captions
         caption_path = os.path.join(args.save_dir, f'episode_{episode}_captions.txt')
-        logs = agent.get_logs() 
+        logs, invalid_generation_counts = agent.get_logs() 
         with open(caption_path, 'w') as f:
             f.write('\n'.join(logs))
             
+        # save percentage of invalid generations as plot (percentage over episode length)
+        plt.figure()
+        plt.bar(['Invalid Generations', 'Valid Generations'], [invalid_generation_counts, ep_l - invalid_generation_counts])
+        plt.title(f'Invalid Generation Percentage for Episode {episode}')
+        plt.xlabel('Generation Type')
+        plt.ylabel('Count')
+        plt.tight_layout()
+        plt.savefig(os.path.join(args.save_dir, f'episode_{episode}_invalid_generation_count.png'))
+        
         # save action distribution
         all_actions = {env.action_meanings[i]: 0 for i in range(env.action_space.n)}
         for log in logs:
