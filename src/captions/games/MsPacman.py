@@ -1,48 +1,67 @@
-DIRECTIONS = {
-    0: "UP",
-    1: "RIGHT",
-    2: "DOWN",
-    3: "LEFT"
-}
+import math
+from ocatari.ram.mspacman import Player, Ghost, Fruit, PowerPill, Pill, Score, Life
 
-def make_caption(ram):
-    mappings = dict(
-        enemy_sue_x=6,
-        enemy_inky_x=7,
-        enemy_pinky_x=8,
-        enemy_blinky_x=9,
-        enemy_sue_y=12,
-        enemy_inky_y=13,
-        enemy_pinky_y=14,
-        enemy_blinky_y=15,
-        player_x=10,
-        player_y=16,
-        fruit_x=11,
-        fruit_y=17,
-        ghosts_count=19,
-        player_direction=56,
-        dots_eaten_count=119,
-        player_score=120,
-        num_lives=123
-    )
+def make_caption(ram, objs):
+    """
+    Generate a structured caption for the current Ms. Pac-Man game state.
+    Now lists only the 10 closest pellets instead of clustering them.
+    """
+    object_types = (Player, Ghost, Fruit, PowerPill, Pill, Score, Life)
     
-    if ram[mappings["fruit_x"]] == 0 and ram[mappings["fruit_y"]] == 0:
-        fruit_sentence = "No fruit on the map."
+    objects_by_type = {
+        cls.__name__: [obj for obj in objs if isinstance(obj, cls)]
+        for cls in object_types
+    }
+    
+    # HUD elements do not require spatial sorting.
+    hud_types = {"Score", "Life"}
+    
+    # For non-HUD objects, sort by y then x.
+    for type_name, obj_list in objects_by_type.items():
+        if type_name not in hud_types:
+            obj_list.sort(key=lambda o: (o._xy[1], o._xy[0]))
+
+    lines = []
+
+    # --- HUD Elements ---
+    if objects_by_type.get("Score"):
+        lines.append(f"Score: {objects_by_type['Score'][0].value}")
+    if objects_by_type.get("Life"):
+        lines.append(f"Lives Remaining: {objects_by_type['Life'][0].value}")
+
+    # --- Player ---
+    if objects_by_type.get("Player"):
+        player = objects_by_type["Player"][0]
+        lines.append(f"Player Position: x={player._xy[0]}, y={player._xy[1]}")
     else:
-        fruit_sentence = f"Fruit position: (x={ram[mappings['fruit_x']]}, y={ram[mappings['fruit_y']]})"
-    
-    caption = f"""
-            Ghosts left: {ram[mappings['ghosts_count']]} \n
-            Lives: {ram[mappings['num_lives']]} \n
-            Score: {ram[mappings['player_score']]} \n
-            Player position: (x={ram[mappings['player_x']]}, y={ram[mappings['player_y']]}) \n
-            Player direction: {DIRECTIONS[ram[mappings['player_direction']]]} \n
-            Pellets eaten: {ram[mappings['dots_eaten_count']]} \n
-            {fruit_sentence} \n
-            Sue position: (x={ram[mappings['enemy_sue_x']]}, y={ram[mappings['enemy_sue_y']]}) \n
-            Inky position: (x={ram[mappings['enemy_inky_x']]}, y={ram[mappings['enemy_inky_y']]}) \n
-            Pinky position: (x={ram[mappings['enemy_pinky_x']]}, y={ram[mappings['enemy_pinky_y']]}) \n
-            Blinky position: (x={ram[mappings['enemy_blinky_x']]}, y={ram[mappings['enemy_blinky_y']]}) \n
-            """
-            
-    return caption
+        player = None
+
+    # --- Ghosts ---
+    if objects_by_type.get("Ghost"):
+        for i, ghost in enumerate(objects_by_type["Ghost"]):
+            lines.append(f"Ghost {i+1} Position: x={ghost._xy[0]}, y={ghost._xy[1]}")
+
+    # --- Fruit ---
+    if objects_by_type.get("Fruit"):
+        for i, fruit in enumerate(objects_by_type["Fruit"]):
+            lines.append(f"Fruit {i+1} Position: x={fruit._xy[0]}, y={fruit._xy[1]}")
+
+    # --- Power Pills ---
+    if objects_by_type.get("PowerPill"):
+        for i, pill in enumerate(objects_by_type["PowerPill"]):
+            lines.append(f"Power Pill {i+1} Position: x={pill._xy[0]}, y={pill._xy[1]}")
+
+    # --- Pellets (Top 10 Closest) ---
+    if player and objects_by_type.get("Pill"):
+        pills = objects_by_type["Pill"]
+        pills.sort(key=lambda p: euclidean_distance(p._xy, player._xy))
+        closest_pills = pills[:10]
+        for i, pill in enumerate(closest_pills):
+            lines.append(f"Closest Pellet {i+1} Position: x={pill._xy[0]}, y={pill._xy[1]}")
+
+    return "\n".join(lines)
+
+
+def euclidean_distance(p1, p2):
+    """Compute the Euclidean distance between two points."""
+    return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)

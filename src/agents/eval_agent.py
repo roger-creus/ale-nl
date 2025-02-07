@@ -17,7 +17,7 @@ parser.add_argument('--seed', type=int, default=1)
 
 # nlp
 parser.add_argument('--model_name', type=str, default='Qwen/Qwen2.5-0.5B-Instruct')
-parser.add_argument('--temperature', type=float, default=0.01)
+parser.add_argument('--temperature', type=float, default=0.5)
 parser.add_argument('--context_length', type=int, default=0)
 parser.add_argument('--prompt_chain_path', type=str, default='prompt_chains/simple')
 
@@ -73,7 +73,7 @@ if __name__ == '__main__':
             # query LLM agent
             action = agent.generate(info['caption'])
             # round float
-            print(f'=== Step {c} | Action: {action} | Inference Time: {round(time.time() - generation_time, 2)}s ===')
+            print(f'=== Step {c} | Action: {env.action_meanings[action]} | Inference Time: {round(time.time() - generation_time, 2)}s ===')
             generation_time = time.time()
             
             # step environment

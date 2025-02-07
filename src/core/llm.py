@@ -17,6 +17,17 @@ class LLMAgent():
         save_dir="results",
         temperature=0.01,
     ):
+        
+        # misc
+        self.env_id = env_id
+        self.temperature = temperature
+        self.action_meanings = action_meanings
+        print(f"LLM agent {model_name} initialized for {env_id}")
+        self.save_dir = save_dir
+        self.game_description = open(f"src/captions/game_descriptions/{env_id}.txt", "r").read()
+        self.invalid_generation_counter = 0
+        self.logs = []
+        
         # load LLM model
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
@@ -44,14 +55,6 @@ class LLMAgent():
             with open(os.path.join(prompt_chain_path, file), 'r') as f:
                 self.prompt_chain.append(f.read())
                 
-        # misc
-        self.temperature = temperature
-        self.env_id = env_id
-        self.action_meanings = action_meanings
-        print(f"LLM agent {model_name} initialized for {env_id}")
-        self.save_dir = save_dir
-        self.invalid_generation_counter = 0
-        self.logs = []
                 
     def generate(self, observation):
         llm_chain = []
@@ -61,7 +64,7 @@ class LLMAgent():
             
             # add intro and observation to first prompt
             if i == 0:
-                llm_chain[-1]["content"] = f"You are playing {self.env_id}. The available actions are: {self.action_meanings}.\n" + llm_chain[-1]["content"] + "\n" + observation
+                llm_chain[-1]["content"] = f"You are playing {self.env_id}. {self.game_description}\nThe available actions are: {self.action_meanings}.\n" + llm_chain[-1]["content"] + "\n" + observation
 
             # add reminder of actions to last prompt
             if i == len(self.prompt_chain) - 1:

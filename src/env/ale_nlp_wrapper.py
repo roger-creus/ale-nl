@@ -5,11 +5,6 @@ from src.captions.utils import parse_caption, ENVS_AVAILABLE
 from IPython import embed
 
 class ALENLPWrapper(gym.Wrapper):
-    """
-    Wrapper for ALE environments to provide NLP observations with frame skip logic.
-    RAM annotations taken from:
-    https://github.com/mila-iqia/atari-representation-learning/blob/master/atariari/benchmark/ram_annotations.py
-    """
     def __init__(
         self,
         env,
@@ -105,7 +100,7 @@ class ALENLPWrapper(gym.Wrapper):
                 caption += f"<STATE>\n{prompt_context['states'][i]}\n<\STATE>\n"
                 caption += f"<ACTION>\n{prompt_context['actions'][i]}\n<\ACTION>\n"
                 caption += f"<REWARD>\n{prompt_context['rewards'][i]}\n<\REWARD>\n"
-                caption += f"<TERMINAL>\n{prompt_context['terminals'][i]}\n<\TERMINAL>"
+                # caption += f"<TERMINAL>\n{prompt_context['terminals'][i]}\n<\TERMINAL>"
             
         return caption
         

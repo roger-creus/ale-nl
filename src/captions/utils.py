@@ -1,23 +1,27 @@
 from src.captions.games.SpaceInvaders import make_caption as make_caption_spaceinvaders
 from src.captions.games.Freeway import make_caption as make_caption_freeway
+from src.captions.games.Seaquest import make_caption as make_caption_seaquest
+from src.captions.games.MsPacman import make_caption as make_caption_mspacman
 
 ENVS_AVAILABLE = [
     "SpaceInvadersNoFrameskip-v4",
     "FreewayNoFrameskip-v4",
+    "SeaquestNoFrameskip-v4",
+    "MsPacmanNoFrameskip-v4",
+    
 ]
-
-def clean_caption(caption):
-    caption =  "\n".join([line.strip() for line in caption.split("\n")])
-    caption = "\n".join([line for line in caption.split("\n") if line])
-    return caption
 
 def parse_caption(ram, objs, env_id):
     if "SpaceInvaders" in env_id:
         caption = make_caption_spaceinvaders(ram, objs)
     elif "Freeway" in env_id:
         caption = make_caption_freeway(ram, objs)
+    elif "Seaquest" in env_id:
+        caption = make_caption_seaquest(ram, objs)
+    elif "MsPacman" in env_id:
+        caption = make_caption_mspacman(ram, objs)
     else:
         raise NotImplementedError(f"Environment {env_id} not supported.")
     
-    return clean_caption(caption)
+    return caption
     
