@@ -27,7 +27,7 @@ def make_caption(ram, objs):
     # For non-HUD objects, sort them by vertical then horizontal position using _xy.
     for type_name, obj_list in objects_by_type.items():
         if type_name not in hud_types:
-            obj_list.sort(key=lambda o: (o._xy[1], o._xy[0]))
+            obj_list.sort(key=lambda o: (o.center[1], o.center[0]))
 
     lines = []
 
@@ -44,21 +44,21 @@ def make_caption(ram, objs):
     # Player (Asterix)
     if objects_by_type.get("Player"):
         player_obj = objects_by_type["Player"][0]
-        lines.append(f"Player Position: x={player_obj._xy[0]}, y={player_obj._xy[1]}")
+        lines.append(f"Player Position: x={player_obj.center[0]}, y={player_obj.center[1]}")
 
     # Enemies (e.g., lyres or other harmful objects)
     if objects_by_type.get("Enemy"):
         for i, enemy in enumerate(objects_by_type["Enemy"]):
-            lines.append(f"Enemy {i+1} Position: x={enemy._xy[0]}, y={enemy._xy[1]}")
+            lines.append(f"Enemy {i+1} Position: x={enemy.center[0]}, y={enemy.center[1]}")
 
     # Consumables (e.g., lyres that you should avoid or similar objects)
     if objects_by_type.get("Consumable"):
         for i, consumable in enumerate(objects_by_type["Consumable"]):
-            lines.append(f"Consumable {i+1} Position: x={consumable._xy[0]}, y={consumable._xy[1]}")
+            lines.append(f"Consumable {i+1} Position: x={consumable.center[0]}, y={consumable.center[1]}")
 
     # Rewards (beneficial objects to collect)
     if objects_by_type.get("Reward"):
         for i, reward in enumerate(objects_by_type["Reward"]):
-            lines.append(f"Reward {i+1} Position: x={reward._xy[0]}, y={reward._xy[1]}")
+            lines.append(f"Reward {i+1} Position: x={reward.center[0]}, y={reward.center[1]}")
 
     return "\n".join(lines)

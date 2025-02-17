@@ -28,7 +28,7 @@ def make_caption(ram, objs):
 
     for type_name, obj_list in objects_by_type.items():
         if type_name not in hud_types:
-            obj_list.sort(key=lambda o: (o._xy[1], o._xy[0]))
+            obj_list.sort(key=lambda o: (o.center[1], o.center[0]))
 
     lines = []
 
@@ -52,30 +52,30 @@ def make_caption(ram, objs):
     # --- Game Objects ---
     if objects_by_type.get("Player"):
         player_obj = objects_by_type["Player"][0]
-        lines.append(f"Player Submarine Position: x={player_obj._xy[0]}, y={player_obj._xy[1]}")
+        lines.append(f"Player Submarine Position: x={player_obj.center[0]}, y={player_obj.center[1]}")
 
     if objects_by_type.get("Diver"):
         for i, diver in enumerate(objects_by_type["Diver"]):
-            lines.append(f"Diver {i+1} Position: x={diver._xy[0]}, y={diver._xy[1]}")
+            lines.append(f"Diver {i+1} Position: x={diver.center[0]}, y={diver.center[1]}")
 
     if objects_by_type.get("Shark"):
         for i, shark in enumerate(objects_by_type["Shark"]):
-            lines.append(f"Shark {i+1} Position: x={shark._xy[0]}, y={shark._xy[1]}")
+            lines.append(f"Shark {i+1} Position: x={shark.center[0]}, y={shark.center[1]}")
 
     if objects_by_type.get("Submarine"):
         for i, sub in enumerate(objects_by_type["Submarine"]):
-            lines.append(f"Enemy Submarine {i+1} Position: x={sub._xy[0]}, y={sub._xy[1]}")
+            lines.append(f"Enemy Submarine {i+1} Position: x={sub.center[0]}, y={sub.center[1]}")
 
     if objects_by_type.get("SurfaceSubmarine"):
         for i, sub in enumerate(objects_by_type["SurfaceSubmarine"]):
-            lines.append(f"Surface Submarine {i+1} Position: x={sub._xy[0]}, y={sub._xy[1]}")
+            lines.append(f"Surface Submarine {i+1} Position: x={sub.center[0]}, y={sub.center[1]}")
 
     if objects_by_type.get("EnemyMissile"):
         for i, missile in enumerate(objects_by_type["EnemyMissile"]):
-            lines.append(f"Enemy Missile {i+1} Position: x={missile._xy[0]}, y={missile._xy[1]}")
+            lines.append(f"Enemy Missile {i+1} Position: x={missile.center[0]}, y={missile.center[1]}")
 
     if objects_by_type.get("PlayerMissile"):
         for i, missile in enumerate(objects_by_type["PlayerMissile"]):
-            lines.append(f"Player Torpedo {i+1} Position: x={missile._xy[0]}, y={missile._xy[1]}")
+            lines.append(f"Player Torpedo {i+1} Position: x={missile.center[0]}, y={missile.center[1]}")
 
     return "\n".join(lines)
