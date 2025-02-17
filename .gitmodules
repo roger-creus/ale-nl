@@ -1,0 +1,3 @@
+[submodule "ocatari"]
+	path = ocatari
+	url = git@github.com:roger-creus/OC_Atari.git
