@@ -5,6 +5,7 @@ from src.captions.games.MsPacman import make_caption as make_caption_mspacman
 from src.captions.games.Asterix import make_caption as make_caption_asterix
 from src.captions.games.BattleZone import make_caption as make_caption_battlezone
 from src.captions.games.BeamRider import make_caption as make_caption_beamrider
+from src.captions.games.Bowling import make_caption as make_caption_bowling
 
 ENVS_AVAILABLE = [
     "SpaceInvadersNoFrameskip-v4",
@@ -14,6 +15,7 @@ ENVS_AVAILABLE = [
     "AsterixNoFrameskip-v4",
     "BattleZoneNoFrameskip-v4",
     "BeamRiderNoFrameskip-v4",
+    "BowlingNoFrameskip-v4",
 ]
 
 def parse_caption(ram, objs, env_id):
@@ -31,6 +33,8 @@ def parse_caption(ram, objs, env_id):
         caption = make_caption_battlezone(ram, objs)
     elif "BeamRider" in env_id:
         caption = make_caption_beamrider(ram, objs)
+    elif "Bowling" in env_id:
+        caption = make_caption_bowling(ram, objs)
     else:
         raise NotImplementedError(f"Environment {env_id} not supported.")
     

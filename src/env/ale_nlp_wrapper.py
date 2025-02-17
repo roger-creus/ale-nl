@@ -96,7 +96,7 @@ class ALENLPWrapper(gym.Wrapper):
                 
             # history states
             else:
-                caption += f"<TIMESTEP>\nt-{n-i+1}\n<\TIMESTEP>\n"
+                caption += f"<TIMESTEP>\nt-{n-i-1}\n<\TIMESTEP>\n"
                 caption += f"<STATE>\n{prompt_context['states'][i]}\n<\STATE>\n"
                 caption += f"<ACTION>\n{prompt_context['actions'][i]}\n<\ACTION>\n"
                 caption += f"<REWARD>\n{prompt_context['rewards'][i]}\n<\REWARD>\n"
