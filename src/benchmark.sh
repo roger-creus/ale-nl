@@ -6,6 +6,7 @@ envs=(
   "MsPacman"
   "Seaquest"
   "Freeway"
+  "Asterix"
 )
 
 # List of model names
@@ -14,17 +15,16 @@ models=(
   "Qwen/Qwen2.5-0.5B-Instruct"
   "meta-llama/Llama-3.2-3B-Instruct"
   "microsoft/phi-4"
-  "mistralai/Mixtral-8x7B-Instruct-v0.1"
+  #"Qwen/Qwen2.5-14B-Instruct"
+  #"mistralai/Mixtral-8x7B-Instruct-v0.1"
   #"microsoft/Phi-3.5-mini-instruct"
   #"meta-llama/Meta-Llama-3-8B-Instruct"
   #"deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
-  #"Qwen/Qwen2.5-14B-Instruct"
   #"deepseek-ai/DeepSeek-R1-Distill-Qwen-14B"
-  #"mistralai/Mixtral-8x7B-Instruct-v0.1"
 )
 
 # List of context lengths
-context_lengths=(1)
+context_lengths=(0 1)
 
 # List of prompt chains
 prompt_chains=(
@@ -35,8 +35,8 @@ prompt_chains=(
 
 temperatures=(
   0.01
-  0.5
-  1.0
+  0.6
+  #1.0
 )
 
 # Loop through all combinations of envs, models, and context_lengths

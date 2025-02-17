@@ -64,7 +64,7 @@ class LLMAgent():
             
             # add intro and observation to first prompt
             if i == 0:
-                llm_chain[-1]["content"] = f"You are playing {self.env_id}. {self.game_description}\nThe available actions are: {self.action_meanings}.\n" + llm_chain[-1]["content"] + "\n" + observation
+                llm_chain[-1]["content"] = f"You are playing {self.env_id}. {self.game_description}\nThe available actions are: {self.action_meanings}. In our coordinate system, (x=0, y=0) is at the upper left corner of the screen, and as x and y increase, positions move toward the lower right corner.\n" + llm_chain[-1]["content"] + "\n" + observation
 
             # add reminder of actions to last prompt
             if i == len(self.prompt_chain) - 1:
