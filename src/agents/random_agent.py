@@ -36,12 +36,15 @@ if __name__ == '__main__':
         ep_r = 0
         ep_l = 0
         frames = []
-
+        c = 0
         while not done:
+            c += 1
+            # record frames
             frames.append(env.render())
 
             # step simulation
             action = env.action_space.sample()
+            print(f'=== Step {c} | Action: {env.action_meanings[action]} ===')
             obs, r, term, trunc, info = env.step(action)
 
             # store metrics
@@ -68,8 +71,8 @@ if __name__ == '__main__':
     print(f'Mean Length: {mean_length}, Std Length: {std_length}')
     
     with open(os.path.join(args.save_dir, 'metrics.csv'), 'w') as f:
-        f.write('model_name,env_id,sys_prompt,context_length,episode_reward,episode_length\n')
+        f.write('model_name,env_id,prompt_chain,temperature,context_length,episode_reward,episode_length\n')
         for i in range(args.num_episodes):
-            f.write(f'random,{env_name},none,none,{ep_rewards[i]},{ep_lengths[i]}\n')
+            f.write(f'random,{env_name},none,none,none,{ep_rewards[i]},{ep_lengths[i]}\n')
    
     env.close()
