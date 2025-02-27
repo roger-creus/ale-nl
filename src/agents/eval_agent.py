@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import time
 
 from src.core.env.env import make_env
-from src.core.llm import LLMAgent
+from src.core.llm.llm import LLMAgent
 from src.core.env.ale_nlp_wrapper import ALENLPWrapper
 
 from IPython import embed
@@ -71,7 +71,7 @@ if __name__ == '__main__':
             frames.append(env.render())
 
             # query LLM agent
-            action = agent.generate(info['caption'])
+            action = agent.generate(info['caption'], img=env.env.env.env.get_rgb_state)
             # round float
             print(f'=== Step {c} | Action: {env.action_meanings[action]} | Inference Time: {round(time.time() - generation_time, 2)}s ===')
             generation_time = time.time()
