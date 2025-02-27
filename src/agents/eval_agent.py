@@ -4,15 +4,15 @@ import imageio
 import matplotlib.pyplot as plt
 import time
 
-from src.env.env import make_env
+from src.core.env.env import make_env
 from src.core.llm import LLMAgent
-from src.env.ale_nlp_wrapper import ALENLPWrapper
+from src.core.env.ale_nlp_wrapper import ALENLPWrapper
 
 from IPython import embed
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env_id', type=str, default='SpaceInvaders')
-parser.add_argument('--num_episodes', type=int, default=5)
+parser.add_argument('--num_episodes', type=int, default=1)
 parser.add_argument('--seed', type=int, default=1)
 
 # nlp

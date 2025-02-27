@@ -3,9 +3,8 @@ import torch
 import os
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from src.core.logger_utils import log_chain
+from src.core.utils import log_chain
 from IPython import embed
-
 
 class LLMAgent():
     def __init__(

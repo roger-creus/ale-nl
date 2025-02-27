@@ -1,6 +1,5 @@
 from ocatari.ram.battlezone import Player, Crosshair, Shot, Radar, Radar_Content, Blue_Tank, Yellow_Blue_Tank, Red_Thing, Boss, Score, Life
 
-
 def make_caption(ram, objs):
     """
     Generate a structured caption for the current Battlezone game state.

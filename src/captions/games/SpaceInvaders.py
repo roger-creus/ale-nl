@@ -1,6 +1,4 @@
-from ocatari.ram.game_objects import NoObject
 from ocatari.ram.spaceinvaders import Player, Alien, Satellite, Shield, Bullet
-from IPython import embed
 
 def make_caption(ram, objs):
     ram_mappings = {
@@ -9,8 +7,8 @@ def make_caption(ram, objs):
     }
     
     lines = []
-    lines.append(f"You have {ram[ram_mappings['num_lives']]} lives remaining.")
-    lines.append(f"There are {ram[ram_mappings['invaders_left_count']]} aliens left on the screen.")
+    lines.append(f"Num Lives: {ram[ram_mappings['num_lives']]}")
+    lines.append(f"Aliens Left: {ram[ram_mappings['invaders_left_count']]}")
     
     object_types = (Player, Alien, Satellite, Shield, Bullet)
     objects_by_type = {
@@ -36,16 +34,15 @@ def make_caption(ram, objs):
                     else:
                         source = "unknown"
                     lines.append(
-                        f"A {source} bullet (Bullet {index}) is at position (x={obj.center[0]}, y={obj.center[1]})."
+                        f"A {source} bullet (Bullet {index}) position: (x={obj.center[0]}, y={obj.center[1]})."
                     )
                 else:
                     lines.append(
-                        f"{type_name} {index} is at position (x={obj.center[0]}, y={obj.center[1]})."
+                        f"{type_name} {index} position: (x={obj.center[0]}, y={obj.center[1]})."
                     )
     
     lines.extend(describe_alien_rows(aliens))
     return "\n".join(lines)
-
 
 def describe_alien_rows(aliens):
     if not aliens:
