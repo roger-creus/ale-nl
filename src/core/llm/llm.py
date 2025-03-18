@@ -96,7 +96,7 @@ class LLMAgent():
             action_idx = 0
             semantic_action = "NOOP"
 
-        llm_chain[-1]["content"] = output + f"\nCHOSEN ACTION: {semantic_action}"
+        llm_chain[-1]["content"] = semantic_action
         self.logs.append(log_chain(llm_chain))
         return action_idx
     
