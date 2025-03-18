@@ -1,4 +1,5 @@
 gymnasium[atari,accept-rom-license,other]
 ocatari
 transformers[torch]
+qwen-vl-utils
 IPython
