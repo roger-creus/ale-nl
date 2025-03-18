@@ -2,8 +2,8 @@ import argparse
 import os
 import imageio
 
-from src.env.env import make_env
-from src.env.ale_nlp_wrapper import ALENLPWrapper
+from src.core.env.env import make_env
+from src.core.env.ale_nlp_wrapper import ALENLPWrapper
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env_id', type=str, default='SpaceInvaders')

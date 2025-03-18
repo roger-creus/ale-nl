@@ -1,12 +1,8 @@
 import transformers
 import torch
 import os
-import numpy as np
-from PIL import Image
-from transformers import AutoProcessor, AutoTokenizer, AutoModelForCausalLM, Qwen2_5_VLForConditionalGeneration
-from qwen_vl_utils import process_vision_info
+from transformers import AutoProcessor, AutoTokenizer, AutoModelForCausalLM
 
-from functools import partial
 from src.core.utils import log_chain
 from IPython import embed
 
@@ -32,25 +28,12 @@ class LLMAgent():
         self.logs = []
         
         # create model
-        try:
-            self.model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                torch_dtype=torch.bfloat16,
-                attn_implementation="flash_attention_2",
-                device_map="auto"
-            )
-            self.is_vlm = False
-            print("Detected Language model")
-        except Exception as e:
-            self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-                model_name,
-                torch_dtype=torch.bfloat16,
-                attn_implementation="flash_attention_2",
-                device_map="auto"
-            )
-            self.is_vlm = True
-            print("Detected Vision-Language model")
-            
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.bfloat16,
+            attn_implementation="flash_attention_2",
+            device_map="auto"
+        )
         print(f"{model_name} initialized for {env_id}")
             
         # create processor
@@ -74,52 +57,9 @@ class LLMAgent():
             do_sample=True,
             temperature=temperature,
             pad_token_id=self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else self.tokenizer.eos_token_id, 
-        ) if not self.is_vlm else partial(
-            self.vlm_pipeline,
-            temperature=temperature,
-            do_sample=True
         )
-                
-    def vlm_pipeline(self, llm_chain, img, temperature, do_sample):
-        img = Image.fromarray(np.uint8(img))
         
-        llm_chain[0]["content"] = [
-            {
-                "type": "text", "text": llm_chain[0]["content"]
-            },
-            {
-                "type": "image", "image": img
-            }
-        ]
-        
-        text = self.processor.apply_chat_template(llm_chain, tokenize=False, add_generation_prompt=True)
-        image_inputs, video_inputs = process_vision_info(llm_chain)
-
-        inputs = self.processor(
-            text=[text],
-            images=image_inputs,
-            videos=video_inputs,
-            padding=True,
-            return_tensors="pt",
-        )
-        inputs = inputs.to(self.model.device)
-        
-        generated_ids = self.model.generate(
-            **inputs,
-            max_new_tokens=self.max_new_tokens,
-            temperature=temperature,
-            do_sample=do_sample
-        )
-        generated_ids_trimmed = [
-            out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)
-        ]
-        
-        output_text = self.processor.batch_decode(
-            generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
-        )
-        return output_text[0]
-                
-    def generate(self, observation, img):
+    def generate(self, observation):
         llm_chain = []
 
         for i, prompt in enumerate(self.prompt_chain):
@@ -142,10 +82,7 @@ class LLMAgent():
             if i == len(self.prompt_chain) - 1:
                 llm_chain[-1]["content"] += f"\nRemember the available actions are: {self.action_meanings}"
 
-            if self.is_vlm:
-                output = self.pipeline(llm_chain, img)
-            else:
-                output = self.pipeline(llm_chain)
+            output = self.pipeline(llm_chain)
                 
             output = output[0]['generated_text'][-1]["content"] if isinstance(output, list) else output
             llm_chain.append({"role": "assistant", "content": output})
@@ -159,7 +96,7 @@ class LLMAgent():
             action_idx = 0
             semantic_action = "NOOP"
 
-        llm_chain[-1]["content"] = semantic_action
+        llm_chain[-1]["content"] = output + f"\nCHOSEN ACTION: {semantic_action}"
         self.logs.append(log_chain(llm_chain))
         return action_idx
     

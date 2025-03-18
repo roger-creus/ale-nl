@@ -27,7 +27,8 @@ class ALENLPWrapper(gym.Wrapper):
 
     def reset(self):
         obs, info = self.env.reset()
-        ram = self.env.unwrapped.ale.getRAM()
+
+        ram = self.env.unwrapped.env.env.ale.getRAM()
         objs = self.env.objects
         current_caption = self.get_current_caption(ram, objs)
         self.init_prompt_context()
@@ -44,7 +45,7 @@ class ALENLPWrapper(gym.Wrapper):
         
         for _ in range(self.frame_skip):
             obs, reward, term, trunc, info = self.env.step(action)
-            ram = self.env.unwrapped.ale.getRAM()
+            ram = self.env.unwrapped.env.env.ale.getRAM()
             objs = self.env.objects
             current_caption = self.get_current_caption(ram, objs)
             skipped_captions.append(current_caption)
@@ -100,7 +101,6 @@ class ALENLPWrapper(gym.Wrapper):
                 caption += f"<STATE>\n{prompt_context['states'][i]}\n<\STATE>\n"
                 caption += f"<ACTION>\n{prompt_context['actions'][i]}\n<\ACTION>\n"
                 caption += f"<REWARD>\n{prompt_context['rewards'][i]}\n<\REWARD>\n"
-                # caption += f"<TERMINAL>\n{prompt_context['terminals'][i]}\n<\TERMINAL>"
             
         return caption
         
