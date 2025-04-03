@@ -3,3 +3,4 @@ ocatari
 transformers[torch]
 flash-attn
 IPython
+openai
