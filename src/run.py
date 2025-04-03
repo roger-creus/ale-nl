@@ -3,17 +3,17 @@ import os
 import imageio
 import matplotlib.pyplot as plt
 import time
-
+from openai import OpenAI
 from src.core.env.env import make_env
-from src.core.llm.llm import LLMAgent
+from src.core.llm.local_llm import LocalLLMAgent
+from src.core.llm.openai_llm import OpenAIAgent
 from src.core.env.ale_nlp_wrapper import ALENLPWrapper
-
-from IPython import embed
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env_id', type=str, default='SpaceInvaders')
 parser.add_argument('--num_episodes', type=int, default=1)
 parser.add_argument('--seed', type=int, default=1)
+parser.add_argument('--save_dir', type=str, default='results')
 
 # nlp
 parser.add_argument('--model_name', type=str, default='Qwen/Qwen2.5-0.5B-Instruct')
@@ -23,10 +23,20 @@ parser.add_argument('--prompt_chain_path', type=str, default='prompt_chains/simp
 
 if __name__ == '__main__':
     args = parser.parse_args()
-
+    
+    # check if the model_name exists in openai
+    client = OpenAI()
+    try:
+        client.models.retrieve(args.model_name)
+        openai_agent = True
+        print(f'Model {args.model_name} exists in OpenAI. Using OpenAI API.')
+    except:
+        openai_agent = False
+        print(f'Model {args.model_name} does not exist in OpenAI. Using Local Model.')
+    
     # create save directory
     args.save_dir = os.path.join(
-        'results',
+        args.save_dir,
         args.model_name.split('/')[-1],
         args.env_id,
         args.prompt_chain_path.split("/")[-1],
@@ -46,7 +56,8 @@ if __name__ == '__main__':
     )
 
     # make LLM agent
-    agent = LLMAgent(
+    llm_class = OpenAIAgent if openai_agent else LocalLLMAgent
+    agent = llm_class(
         model_name=args.model_name,
         env_id=env_name,
         action_meanings=env.action_meanings,
