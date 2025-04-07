@@ -1,6 +1,7 @@
 from src.core.llm.base_llm import LLMAgent
 from openai import OpenAI
 from src.core.utils import log_chain
+from IPython import embed
 
 class OpenAIAgent(LLMAgent):
     def __init__(
@@ -72,6 +73,7 @@ class OpenAIAgent(LLMAgent):
         
         # Extract action from the final output
         final_output = llm_chain[-1]["content"]
+        
         try:
             action_idx = int(final_output.split("ACTION:")[1].strip())
             semantic_action = self.action_meanings[action_idx]
