@@ -5,7 +5,7 @@
 <table>
 <tr>
 <td><img src="static/gpt4o_spaceinvaders.gif" width="100%"/></td>
-<td><img src="static/qwen05_spaceinvaders.gif" width="100%"/></td>
+<td><img src="static/qwen05_asterix.gif" width="100%"/></td>
 <td><img src="static/qwen14_battlezone.gif" width="100%"/></td>
 <td><img src="static/qwen14_beamrider.gif" width="100%"/></td>
 </tr>
@@ -28,7 +28,7 @@ ALE-NL translates game states into natural language descriptions that are easy t
 - Reproduce results with ease 🔁
 
 <p align="center">
-  <img src="static/alenl_diagram.png" width="70%"/>
+  <img src="static/alenl_diagram.png" width="95%"/>
 </p>
 
 ---
