@@ -1,7 +1,6 @@
 from src.core.llm.base_llm import LLMAgent
 from openai import OpenAI
 from src.core.utils import log_chain
-from IPython import embed
 
 class OpenAIAgent(LLMAgent):
     def __init__(

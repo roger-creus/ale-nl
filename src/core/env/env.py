@@ -2,8 +2,6 @@ import gymnasium as gym
 import numpy as np
 from ocatari.core import OCAtari
 
-from IPython import embed
-
 class FireResetEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
     def __init__(self, env: gym.Env) -> None:
         self.env = env

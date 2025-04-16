@@ -2,8 +2,6 @@ import gymnasium as gym
 from collections import deque
 from src.captions.utils import parse_caption, ENVS_AVAILABLE
 
-from IPython import embed
-
 class ALENLPWrapper(gym.Wrapper):
     def __init__(
         self,

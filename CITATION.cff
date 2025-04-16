@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use ALE-NL in your research, please cite it as below."
+title: "ALE-NL: The Arcade Learning Environment in Natural Language"
+authors:
+  - family-names: Creus Castanyer
+    given-names: Roger
+    affiliation: Mila Quebec AI Institute and University of Montreal
+    orcid: "https://orcid.org/0000-0003-1952-3357"
+date-released: 2025-04-16
+version: "0.1.0"
+repository-code: "https://github.com/roger-creus/ale-nl"
+license: MIT

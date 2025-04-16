@@ -25,8 +25,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     # check if the model_name exists in openai
-    client = OpenAI()
     try:
+        client = OpenAI()
         client.models.retrieve(args.model_name)
         openai_agent = True
         print(f'Model {args.model_name} exists in OpenAI. Using OpenAI API.')

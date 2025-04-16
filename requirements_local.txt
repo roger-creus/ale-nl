@@ -1,0 +1,4 @@
+gymnasium[atari,accept-rom-license,other]
+flash-attn
+ocatari
+openai
