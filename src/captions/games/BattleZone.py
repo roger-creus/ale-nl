@@ -58,9 +58,9 @@ def make_caption(ram, objs):
         for i, shot in enumerate(objects_by_type["Shot"]):
             lines.append(f"Shot {i+1} Position: x={shot.center[0]}, y={shot.center[1]}")
     
-    if objects_by_type.get("Radar_Content"):
-        for i, rc in enumerate(objects_by_type["Radar_Content"]):
-            lines.append(f"Radar Content {i+1} Position: x={rc.center[0]}, y={rc.center[1]}")
+    # if objects_by_type.get("Radar_Content"):
+    #     for i, rc in enumerate(objects_by_type["Radar_Content"]):
+    #         lines.append(f"Radar Content {i+1} Position: x={rc.center[0]}, y={rc.center[1]}")
     
     if objects_by_type.get("Blue_Tank"):
         for i, tank in enumerate(objects_by_type["Blue_Tank"]):
