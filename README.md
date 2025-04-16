@@ -131,8 +131,6 @@ Got a new game, prompt strategy, or LLM you want to try? Contributions and sugge
 
 ---
 
----
-
 ## 📚 Citation
 
 If you use **ALE-NL** in your research, please consider citing it using the following format:
