@@ -1,1 +1,1 @@
-Respond only by cleary indicating "ACTION: <action_idx>". Do not include any explanations, words, or additional characters. Any deviation from this format will result in your action being discarded. E.g. ACTION: 3
+Respond only by clearly indicating "ACTION: <action_idx>". Do not include any explanations, words, or additional characters. Any deviation from this format will result in your action being discarded. E.g. ACTION: 3
