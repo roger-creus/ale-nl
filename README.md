@@ -1,5 +1,7 @@
 # 🎮 ALE-NL: The Arcade Learning Environment in Natural Language
 
+Please refer to the [project report](ALE_NL.pdf) for a comprehensive overview.
+
 **ALE-NL** supports the Arcade Learning Environment (ALE) with Large Language Models (LLMs), enabling LLMs to **interact with and be evaluated on Atari games** through natural language. Built on top of [OCAtari](https://github.com/k4ntz/OC_Atari), it allows systematic, interpretable, and **reproducible** benchmarking of LLMs in classic Atari games.
 
 <table>
