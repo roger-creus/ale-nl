@@ -74,6 +74,18 @@ conda create -n ale-nlp python=3.8 -y
 conda activate ale-nlp
 ```
 
+### ☁️ Running OpenAI Models
+
+Only requires OpenAI's API client:
+
+- Make sure your `pip` is up to date by running `pip install --upgrade pip`.
+
+```bash
+pip install -r requirements_api.txt
+```
+
+- Make sure to set your OpenAI API key: `export OPENAI_API_KEY=<your_key>` or `conda env config vars set OPENAI_API_KEY=<your_key>`.
+
 ### 🧠 Running LLMs Locally
 
 Install dependencies with CUDA support:
@@ -84,17 +96,9 @@ pip install transformers[torch]
 pip install -r requirements_local.txt
 ```
 
-### ☁️ Running OpenAI Models
-
-Only requires OpenAI's API client:
-
-```bash
-pip install -r requirements_api.txt
-```
-
-Make sure to set your OpenAI API key.
-
 ### 🔁 Final Setup
+
+Necessary final step:
 
 ```bash
 pip install -e .
@@ -123,9 +127,33 @@ Additional options can be passed for fine-grained control:
 - `--context_length`: Limits the LLM input length
 - _...and more!_
 
-📁 All logs, outputs, and interaction traces will be automatically saved in the specified `--save_dir`.
+e.g. Run `gpt-3.5-turbo-0125` on `SpaceInvaders` with a CoT prompting strategy:
+
+```bash
+python src/run.py --model_name=gpt-3.5-turbo-0125 --env_id=SpaceInvaders --prompt_chain_path=prompt_chains/think_stepbystep
+```
+
+e.g. Run `gpt-4o` on `Freeway` with a zero-shot prompting strategy:
+
+```bash
+python src/run.py --model_name=gpt-4o --env_id=Freeway --prompt_chain_path=prompt_chains/simple
+```
+
+e.g. If installed locally, run `Qwen/Qwen2.5-0.5B` on `SpaceInvaders` with a CoT prompting strategy:
+
+```bash
+python src/run.py --model_name=Qwen/Qwen2.5-0.5B --env_id=SpaceInvaders --prompt_chain_path=prompt_chains/think_stepbystep
+```
+
+(You can cancel the process at any time by pressing `Ctrl+C` or `Ctrl+Z` + `pkill python`)
+
+📁 All logs, outputs, and interaction traces will be automatically saved in the `results` directory.
 
 👉 For the full list of options, check [`src/run.py`](src/run.py).
+
+👉 After running, you can visualize the results with [`plot/plot_benchmark_results.ipynb`](plot/plot_benchmark_results.ipynb).
+
+👉 The full interaction trace, video, and logs are also saved in the `results` directory.
 
 ## 📬 Contribute or Explore More
 

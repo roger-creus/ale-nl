@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 import time
 from openai import OpenAI
 from src.core.env.env import make_env
-from src.core.llm.local_llm import LocalLLMAgent
-from src.core.llm.openai_llm import OpenAIAgent
+
 from src.core.env.ale_nlp_wrapper import ALENLPWrapper
 
 parser = argparse.ArgumentParser()
@@ -26,12 +25,14 @@ if __name__ == '__main__':
     
     # check if the model_name exists in openai
     try:
+        from src.core.llm.openai_llm import OpenAIAgent
         client = OpenAI()
         client.models.retrieve(args.model_name)
         openai_agent = True
         print(f'Model {args.model_name} exists in OpenAI. Using OpenAI API.')
     except:
         openai_agent = False
+        from src.core.llm.local_llm import LocalLLMAgent
         print(f'Model {args.model_name} does not exist in OpenAI. Using Local Model.')
     
     # create save directory
